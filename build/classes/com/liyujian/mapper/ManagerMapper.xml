@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liyujian.mapper.ManagerMapper" >
+	 <resultMap type="com.liyujian.po.Manager" id="managerMap">
+        <id property="id" column="id" />
+        <result property="manager_name" column="manager_name" />
+        <result property="manager_password" column="manager_password" />        
+    </resultMap>
+
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getManagerByName" parameterType="string" resultMap="managerMap">
+            <!-- 此处写sql语句,#{Mapper类传入的参数} -->
+            select * from manager where manager_name = #{manager_name}
+    </select>
+</mapper>

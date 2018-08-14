@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liyujian.mapper.ItemsMapper" >
+<!-- items的映射 -->
+	 <resultMap type="com.liyujian.po.Items" id="itemsMap">
+        <result property="item_id" column="item_id" />
+        <result property="item_name" column="item_name" />     
+    </resultMap>
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getAllItems" resultMap="itemsMap">
+            <!-- 此处写sql语句,#{Mapper类传入的参数} -->
+            select * from item
+    </select>
+    
+    
+<!-- Company的映射 -->
+    <resultMap type="com.liyujian.po.Company" id="companyMap">
+        <result property="company_id" column="company_id" />
+        <result property="company_name" column="company_name" /> 
+        <result property="company_state" column="company_state" />
+        <result property="item_img" column="item_img" /> 
+		<result property="item_id" column="item_id" />      
+    </resultMap>
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getItemsChildren" parameterType="string" resultMap="companyMap">
+            <!-- 此处写sql语句,#{Mapper类传入的参数} -->
+            select * from company where item_id = #{item_id}
+    </select>
+    
+<!-- Image的映射 -->
+    <resultMap type="com.liyujian.po.Image" id="imageMap">
+        <result property="image_id" column="image_id" />
+        <result property="image_name" column="image_name" /> 
+        <result property="image_url" column="image_url" />
+        <result property="image_state" column="image_state" /> 
+		<result property="image_uplaodtime" column="image_uplaodtime" />    
+		<result property="company_id" column="company_id" />     
+    </resultMap>
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getImage" parameterType="string" resultMap="imageMap">
+            <!-- 此处写sql语句,#{Mapper类传入的参数} -->
+            select * from image where company_id = #{company_id}
+    </select>
+</mapper>

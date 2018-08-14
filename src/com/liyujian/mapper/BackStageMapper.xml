@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liyujian.mapper.BackStageMapper">
+	<!--添加一级分类  -->  
+    <insert id="addItem" parameterType="string">  
+        insert into item(item_id,item_name)   
+        values(#{0},#{1})  
+    </insert>  
+    <!-- 获取一个一级分类 -->
+    
+    <!--添加二级分类  --> 
+    <insert id="addCompany" parameterType="string">
+        insert into company(company_id,company_name,company_state,item_img,item_id)
+        values(#{0},#{1},#{2},#{3},#{4})
+    </insert> 
+    
+    <!-- items的映射 -->
+	 <resultMap type="com.liyujian.po.Items" id="itemsMap">
+        <result property="item_id" column="item_id" />
+        <result property="item_name" column="item_name" />     
+    </resultMap>
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getItems" parameterType="string" resultMap="itemsMap">
+            <!-- 此处写sql语句,#{Mapper类传入的参数} -->
+            select * from item where item_id=#{item_id}
+    </select>
+    <!-- Company的映射 -->
+    <resultMap type="com.liyujian.po.Company" id="companyMap">
+        <result property="company_id" column="company_id" />
+        <result property="company_name" column="company_name" />
+        <result property="company_state" column="company_state" />
+        <result property="item_img" column="item_img" />
+        <result property="item_id" column="item_id" /> 
+    </resultMap>
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getAllCompany" resultMap="companyMap">
+            select * from company
+    </select>
+    <select id="getOneCompany" resultMap="companyMap">
+    		select * from company where company_id=#{company_id}
+    </select>
+    <!-- 多个Image的映射 -->
+    <resultMap type="com.liyujian.po.Image" id="imageListMap">
+        <result property="image_id" column="image_id" />
+        <result property="image_name" column="image_name" />
+        <result property="image_url" column="image_url" />
+        <result property="image_state" column="image_state" />
+        <result property="image_uploadtime" column="image_uploadtime" />
+        <result property="company_id" column="company_id" /> 
+    </resultMap>
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getAllImageById" resultMap="imageListMap">
+            select * from image where company_id=#{company_id}
+    </select>
+    <!-- 更改一级分类 -->
+    <update id="updateItem" parameterType="com.liyujian.po.Items">
+    	update item
+    	<set>
+    		<if test="item_name!=null">item_name=#{item_name}</if>
+    	</set>
+    	<where>
+    		item_id=#{item_id}
+    	</where>
+    </update>
+    <!-- 更改二级分类 -->
+    <update id="updateCompany" parameterType="com.liyujian.po.Company">
+    	update company
+    	<set>
+    		<if test="company_name!=null and company_name!=''">company_name=#{company_name},</if>
+    		<if test="company_state!=null and company_state!=''">company_state=#{company_state},</if>
+    		<if test="item_img!=null and item_img!=''">item_img=#{item_img}</if>
+    	</set>
+    	<where>
+    		company_id=#{company_id}
+    	</where>
+    </update>
+    <!-- 查询二级分类图片名称 -->
+    <resultMap type="string" id="companyImgUrlMap">
+        <result property="item_img" column="item_img" />
+    </resultMap>
+    <select id="getCompanyImgUrl" parameterType="string" resultMap="companyImgUrlMap">
+    	select * from company where company_id=#{company_id}
+    </select>
+    <!-- 查询图片的url -->
+    <resultMap type="string" id="imageUrlMap">
+        <result property="image_url" column="image_url" />
+    </resultMap>
+    <select id="getImageUrl" parameterType="string" resultMap="imageUrlMap">
+    	select image.image_url from image where image_id=#{image_id}
+    </select>
+    <!-- 查找图片 -->
+    <resultMap type="com.liyujian.po.Image" id="imageMap">
+        <result property="image_id" column="image_id" />
+        <result property="image_name" column="image_id" />
+        <result property="image_url" column="image_url" />
+        <result property="image_state" column="image_state" />
+        <result property="image_uploadtime" column="image_uploadtime" />
+        <result property="company_id" column="company_id" /> 
+    </resultMap>
+    <!-- 此处select标签的id值对应Mapper类中方法名 -->
+    <select id="getImageById" resultMap="imageMap">
+            select * from image where image_id=#{image_id}
+    </select>
+    
+    <!-- 添加图片 -->
+   	<insert id="addImage" parameterType="com.liyujian.po.Image">
+   		insert into image(image_id,image_name,image_url,image_state,image_uploadtime,company_id)
+   		values(#{image_id},#{image_name},#{image_url},#{image_state},#{image_uploadtime},#{company_id})
+   	</insert>
+   	<!-- 修改图片 -->
+   	 <update id="updateImage" parameterType="com.liyujian.po.Image">
+    	update image
+    	<set>
+    		<if test="image_name!=null and image_name!=''">image_name=#{image_name},</if>
+    		<if test="image_state!=null and image_state!=''">image_state=#{image_state},</if>
+    		<if test="image_url!=null and image_url!=''">image_url=#{image_url},</if>
+    		<if test="image_uploadtime!=null and image_uploadtime!=''">image_uploadtime=#{image_uploadtime}</if>
+    	</set>
+    	<where>
+    		image_id=#{image_id}
+    	</where>
+    </update>
+    <!-- 获取二级，三级分类id -->
+    <resultMap type="string" id="getallcompanyId">
+    	 <result property="company_id" column="company_id" />
+    </resultMap>
+    <select id="getAllCompanyId" resultMap="getallcompanyId">
+    	select company_id from company where item_id=#{item_id}
+    </select>
+    <resultMap type="string" id="getallimageId">
+    	 <result property="image_id" column="image_id" />
+    </resultMap>
+    <select id="getAllImageId" resultMap="getallimageId">
+    	select image_id from image where company_id=#{company_id}
+    </select>
+    <!-- 删除1级分类 -->
+    <delete id="deleteItems" parameterType="string">
+    	delete from item where item_id=#{item_id}
+    </delete>
+    <delete id="deleteCompany" parameterType="string">
+    	delete from company where company_id in
+    	<foreach item="company_id" collection="array" open="(" separator="," close=")">  
+            #{company_id}  
+        </foreach> 
+    </delete>
+    <delete id="deleteImage" parameterType="string">
+    	delete from image where image_id in
+    	
+    	<foreach item="image_id" collection="array" open="(" separator="," close=")">  
+            #{image_id}  
+        </foreach> 
+       
+    </delete>
+    
+</mapper>
